@@ -16,6 +16,9 @@ pyarrow = "^16.0.0"
 fastparquet = "^2024.2.0"
 ipykernel = "^6.29.4"
 
+[tool.poetry.scripts]
+get_data = "nfl_predict.get_data_main:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

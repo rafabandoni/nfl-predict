@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 
-from nfl_predict.models.get_data_params import GetDataParams
+from nfl_predict.get_data.models.get_data_params import GetDataParams
 
 class ScrapeData:
     def __init__(self, params: GetDataParams):
