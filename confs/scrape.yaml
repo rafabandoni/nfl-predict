@@ -1,0 +1,7 @@
+job:
+  KIND: ScrapeJob
+  inputs:
+    KIND: NFLReader
+  outputs:
+    KIND: ParquetWriter
+    path: data/nfl_scraped.parquet

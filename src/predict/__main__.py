@@ -2,9 +2,9 @@
 
 # %% IMPORTS
 
-from predict import script
+from src.predict import scripts
 
 # %% MAIN
 
 if __name__ == "__main__":
-    script.main()
+    scripts.main()
