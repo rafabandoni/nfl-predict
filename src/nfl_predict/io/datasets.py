@@ -6,8 +6,12 @@ from abc import ABC, abstractmethod
 import typing as T
 import pydantic as pdt
 import pandas as pd
+import numpy as np
+import requests
 
-from nfl_predict.utils import scrapers
+from scipy import stats
+from abc import ABC, abstractmethod
+from bs4 import BeautifulSoup
 
 # %% READERS
 
@@ -35,25 +39,63 @@ class Reader(ABC, pdt.BaseModel, strict=True, frozen=True, extra='forbid'):
         """
 
 
-class NFLReader(Reader, strict=True, frozen=True, extra="forbid"):
+class Scrapper(Reader, strict=True, frozen=True, extra="forbid"):
     """
     Reads a dataframe from the NFL provided website.
     """
 
-    KIND: T.Literal["NFLScrapper"] = "NFLScrapper"
+    KIND: T.Literal["Scrapper"] = "Scrapper"
 
-    url: str = "https://www.pro-football-reference.com/years/{year}/games.htm"
-    years: list = [2022, 2023]
-    scraper: scrapers.ScraperKind = pdt.Field(
-        scrapers.NFLScraper(), discriminator="KIND"
-    )
+    url: str
+    years: list
+
+    def scrape(self, year, url):
+        url = url.format(year=year)
+        # html = urlopen(url)
+        html = requests.get(url)
+        soup = BeautifulSoup(html.text, 'html.parser')
+        column_headers = [th.getText() for th in soup.findAll('thead', limit=1)[0].findAll('th')]
+        data_rows = soup.findAll('tbody', limit=1)[0].findAll('tr')[0:]
+        player_data = [[td.getText() for td in data_rows[i].findAll(['th','td'])] for i in range(len(data_rows))]
+
+        year_df = pd.DataFrame(player_data, columns=column_headers)
+        year_df = year_df[(year_df.Date !='Playoffs') & (year_df.Week !='WildCard') & (year_df.Week != 'Week' )]
+        year_df = year_df.infer_objects().reset_index(drop=True)
+        results = year_df.loc[(year_df.iloc[:,8] != '')]
+        winner_pts = np.array(results.iloc[:,8],dtype=int)
+        loser_pts = np.array(results.iloc[:,9],dtype=int)
+        spreads = winner_pts-loser_pts
+        winner_pf = stats.zscore(winner_pts)
+        loser_pf = stats.zscore(loser_pts)
+        percentile = np.array([stats.norm.cdf(x) for x in stats.zscore(spreads)])
+
+        results_df = pd.concat([results,
+                     pd.DataFrame(data=winner_pf,columns=['Winner Performance']),
+                     pd.DataFrame(data=loser_pf,columns=['Loser Performance']),
+                     pd.DataFrame(data=spreads,columns=['Spread']),
+                     pd.DataFrame(data=percentile,columns=['Spread Prcntl']),
+                     ],axis=1)
+            
+        col_len = [x for x in range(results_df.shape[1])]
+        col_len.remove(7)
+        results_df = results_df.iloc[:,col_len]
+        results_df = results_df.rename(columns={list(results_df)[5]:'H/A',
+                                list(results_df)[7]:'Pts Scored',
+                                list(results_df)[8]:'Pts Allowed',
+                                list(results_df)[9]:'Yds Gained',
+                                list(results_df)[10]:'TOs',
+                                list(results_df)[11]:'Yds Allowed',
+                                list(results_df)[12]:'Opp TOs',
+                                list(results_df)[13]:'Tm Performance',
+                                list(results_df)[14]:'Opp Performance'})
+        return results_df
 
     @T.override
     def read(self) -> pd.DataFrame:
         nfl_df = pd.DataFrame()
 
         for year in self.years:
-            results_df = self.scraper.scrape(self.url, year)
+            results_df = self.scrape(year, self.url)
             nfl_df = pd.concat([nfl_df,results_df],axis=0)
 
         nfl_df = nfl_df.reset_index(drop=True)
@@ -85,7 +127,7 @@ class ParquetReader(Reader):
         return data
     
 
-ReaderKind = NFLReader | ParquetReader
+ReaderKind = Scrapper | ParquetReader
 
 #%% WRITERS
 

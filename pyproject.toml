@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "nfl-predict"
-version = "0.0.1"
+name = "NFL Predict Project"
+version = "0.1.0"
 description = "Data Engineering project to predict NFL Stands."
 authors = ["Rafael Bandoni <rafagbandoni@gmail.com>"]
 readme = "README.md"
-packages = [{include = "predict", from = "src"}]
+packages = [{include = "nfl_predict", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -17,9 +17,11 @@ fastparquet = "^2024.2.0"
 ipykernel = "^6.29.4"
 pydantic = "^2.7.1"
 omegaconf = "^2.3.0"
+pydantic-settings = "^2.3.4"
+loguru = "^0.7.2"
 
 [tool.poetry.scripts]
-get-data = "predict.script:main"
+nfl_predict = "nfl_predict.script:main"
 
 [build-system]
 requires = ["poetry-core"]

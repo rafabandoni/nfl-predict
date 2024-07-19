@@ -2,9 +2,9 @@
 
 # %% IMPORTS
 
-from src.nfl_predict import scripts
+from nfl_predict import script
 
 # %% MAIN
 
 if __name__ == "__main__":
-    scripts.main()
+    script.main()
