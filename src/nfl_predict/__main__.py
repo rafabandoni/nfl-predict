@@ -2,7 +2,7 @@
 
 # %% IMPORTS
 
-from src.predict import scripts
+from src.nfl_predict import scripts
 
 # %% MAIN
 

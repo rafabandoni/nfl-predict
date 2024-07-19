@@ -7,7 +7,7 @@ import typing as T
 import pydantic as pdt
 import pandas as pd
 
-from predict.utils import scrapers
+from nfl_predict.utils import scrapers
 
 # %% READERS
 
