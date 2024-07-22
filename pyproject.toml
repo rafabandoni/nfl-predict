@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "NFL Predict Project"
-version = "0.1.0"
+version = "0.2.0"
 description = "Data Engineering project to predict NFL Stands."
 authors = ["Rafael Bandoni <rafagbandoni@gmail.com>"]
 readme = "README.md"
