@@ -1,0 +1,10 @@
+job:
+  KIND: ModellingJob
+  input:
+    KIND: ParquetReader
+    path: data/nfl_scrapped.parquet
+  model:
+    KIND: ModelTeamAvg
+  output:
+    KIND: ParquetWriter
+    path: data/nfl_stats.parquet
