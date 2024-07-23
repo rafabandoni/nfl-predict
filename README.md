@@ -3,8 +3,9 @@ Project to predict NFL stands and superbowl.
 
 -> Currently under development.
 
-Update status:
-2024-05-05: Just developed io and scrape utils to get game data.  
-2024-06-19: Just finished developing productive data engineering job.
+Update status:  
+v0.0.1 - 2024-05-05: Just developed io and scrape utils to get game data.  
+v0.1.0 - 2024-06-19: Just finished developing productive data engineering job.  
+v0.2.1 - 2024-07-23: Finished modelling job.
 
-Working next on data validation, modeling and better readme file.
+Readme file to be improved soon.
