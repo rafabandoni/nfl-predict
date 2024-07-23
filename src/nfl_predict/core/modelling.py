@@ -8,6 +8,8 @@ import pydantic as pdt
 import pandas as pd
 from abc import ABC, abstractmethod
 
+from nfl_predict.core.utils.modelling_func import ModellingFunctions
+
 # %% READERS
 
 class Modelling(ABC, pdt.BaseModel, strict=True, frozen=True, extra='forbid'):
@@ -41,51 +43,12 @@ class ModelTeamAvg(Modelling, strict=True, frozen=True, extra="forbid"):
 
     @T.override
     def run(self, data: pd.DataFrame) -> pd.DataFrame:
-        columns_winner = [
-            'date',
-            'winner_tie',
-            'h_a',
-            'pts_allowed_winner',
-            'yds_gained',
-            'tos'
-        ]
-
-        columns_loser = [
-            'date',
-            'loserttie',
-            'h_a',
-            'pts_allowed_loser',
-            'yds_allowed',
-            'opp_tos',
-        ]
-
-        data_avg_winner = data[columns_winner]
-        data_avg_loser = data[columns_loser]
-
-        data_avg_winner.rename(columns={
-            'winner_tie': 'team',
-            'h_a': 'home',
-            'pts_allowed_winner': 'pts',
-            'yds_gained': 'yds',
-            'tos' : 'turnovers'
-        }, inplace=True)
-
-        data_avg_loser.rename(columns={
-            'loserttie': 'team',
-            'h_a': 'home',
-            'pts_allowed_loser': 'pts',
-            'yds_allowed': 'yds',
-            'opp_tos' : 'turnovers'
-        }, inplace=True)
-
-        data = pd.concat([data_avg_loser, data_avg_winner])
-        data['home'] = data['home'].map({'@' : 1, '' : 0})
-
-        num_columns = ['pts', 'yds', 'turnovers']
-        for column in num_columns:
-            data[column] = data[column].astype('int')
-
-        grouped_data = data.groupby(['team', 'home'], as_index=False).mean(numeric_only=True)        
-        return grouped_data
+        modelling = ModellingFunctions()
+        df_pts_per_year = modelling.create_pts_per_year(data)
+        df = modelling.join_pts_per_year(data, df_pts_per_year)
+        df = modelling.fix_columns(df)
+        df = modelling.fix_home_column(df)
+        outcome_df = modelling.create_outcomes_df(df)
+        return outcome_df
 
 ModellingKind = ModelTeamAvg
