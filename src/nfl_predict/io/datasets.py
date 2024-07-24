@@ -8,6 +8,7 @@ import pydantic as pdt
 import pandas as pd
 import numpy as np
 import requests
+import joblib
 
 from scipy import stats
 from abc import ABC, abstractmethod
@@ -165,5 +166,18 @@ class ParquetWriter(Writer):
     def write(self, data: pd.DataFrame) -> None:
         pd.DataFrame.to_parquet(data, self.path)
 
+class ModelWriter(Writer):
+    """
+    TODO
+    """
 
-WriterKind = ParquetWriter
+    KIND: T.Literal["ModelWriter"] = "ModelWriter"
+
+    path: str
+
+    @T.override
+    def write(self, model) -> None:
+        joblib.dump(model, self.path) 
+
+
+WriterKind = ParquetWriter | ModelWriter
