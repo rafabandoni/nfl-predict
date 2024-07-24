@@ -15,10 +15,10 @@ whl_file=$(ls dist/*.whl)
 pip install "$whl_file"
 
 # Rodar a biblioteca instalada
-nfl_predict confs/scrape.yml &&
-nfl_predict confs/modelling_train_data.yml &&
-nfl_predict confs/modelling_averages.yml &&
-nfl_predict confs/training.yml
+nfl_predict confs/scrape.yaml &&
+nfl_predict confs/modelling_train_data.yaml &&
+nfl_predict confs/modelling_averages.yaml &&
+nfl_predict confs/training.yaml
 
 # Desativar o ambiente virtual
 deactivate
