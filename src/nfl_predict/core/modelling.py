@@ -34,12 +34,12 @@ class Modelling(ABC, pdt.BaseModel, strict=True, frozen=True, extra='forbid'):
         """
 
 
-class ModelTeamAvg(Modelling, strict=True, frozen=True, extra="forbid"):
+class ModelTrainData(Modelling, strict=True, frozen=True, extra="forbid"):
     """
     Reads a dataframe from the NFL provided website.
     """
 
-    KIND: T.Literal["ModelTeamAvg"] = "ModelTeamAvg"
+    KIND: T.Literal["ModelTrainData"] = "ModelTrainData"
 
     @T.override
     def run(self, data: pd.DataFrame) -> pd.DataFrame:
@@ -50,5 +50,31 @@ class ModelTeamAvg(Modelling, strict=True, frozen=True, extra="forbid"):
         df = modelling.fix_home_column(df)
         outcome_df = modelling.create_outcomes_df(df)
         return outcome_df
+    
+class ModelTeamAvg(Modelling, strict=True, frozen=True, extra="forbid"):
+    """
+    
+    """
 
-ModellingKind = ModelTeamAvg
+    KIND: T.Literal["ModelTeamAvg"]
+    
+    @T.override
+    def run(self, data: pd.DataFrame) -> pd.DataFrame:
+        data['year'] = data['date'].str[:4]
+        data_winner = data[['year', 'winner_tie', 'h_a', 'pts_allowed_winner', 'yds_gained', 'tos']]
+        data_loser = data[['year', 'loserttie', 'h_a', 'pts_allowed_loser', 'yds_allowed', 'opp_tos']]
+
+        new_columns = ['year', 'team', 'home', 'pts', 'yds', 'turnovers']
+        data_winner.columns = new_columns
+        data_loser.columns = new_columns
+
+        data_concat = pd.concat([data_winner, data_loser])
+        data_concat['home'] = data_concat['home'] == '@'
+
+        for column in ['pts', 'yds', 'turnovers']:
+            data_concat[column] = data_concat[column].astype('int')
+
+        df_grouped = data_concat.groupby(['year', 'team', 'home'], as_index=False).mean().round(0)
+        return df_grouped 
+
+ModellingKind = ModelTrainData | ModelTeamAvg

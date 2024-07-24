@@ -1,0 +1,10 @@
+job:
+  KIND: ModellingJob
+  input:
+    KIND: ParquetReader
+    path: data/nfl_scrapped.parquet
+  model:
+    KIND: ModelTrainData
+  output:
+    KIND: ParquetWriter
+    path: data/nfl_train_data.parquet

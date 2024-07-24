@@ -7,4 +7,4 @@ job:
     KIND: ModelTeamAvg
   output:
     KIND: ParquetWriter
-    path: data/nfl_stats.parquet
+    path: data/nfl_stats_per_year.parquet
