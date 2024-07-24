@@ -28,7 +28,7 @@ class Modelling(base.Job):
     def run(self) -> base.Locals:
         logger = self.logger_service.logger()
         logger.info("With logger: {}", logger)
-        logger.info("Reading: {}", self.input.KIND)
+        logger.info("Reading: {}", self.input.path)
         data = self.input.read()
         logger.debug("Dataframe shape: {}", data.shape)
 

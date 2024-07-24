@@ -26,7 +26,9 @@ class DataEngineerJob(base.Job):
     def run(self) -> base.Locals:
         logger = self.logger_service.logger()
         logger.info("With logger: {}", logger)
-        logger.info("Reading: {}", self.input.KIND)
+        logger.info("Reading: {}", self.input.url)
+        if self.input.years is not None:
+            logger.info("From years: {}", self.input.years)
         data = self.input.read()
         logger.debug("Dataframe shape: {}", data.shape)
         self.output.write(data)
