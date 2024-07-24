@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import requests
 import joblib
+import os
 
 from scipy import stats
 from abc import ABC, abstractmethod
@@ -164,6 +165,9 @@ class ParquetWriter(Writer):
 
     @T.override
     def write(self, data: pd.DataFrame) -> None:
+        head, tail = os.path.split(self.path)
+        if not os.path.exists(head):
+            os.makedirs(head)
         pd.DataFrame.to_parquet(data, self.path)
 
 class ModelWriter(Writer):
@@ -177,6 +181,9 @@ class ModelWriter(Writer):
 
     @T.override
     def write(self, model) -> None:
+        head, tail = os.path.split(self.path)
+        if not os.path.exists(head):
+            os.makedirs(head)
         joblib.dump(model, self.path) 
 
 

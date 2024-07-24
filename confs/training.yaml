@@ -7,4 +7,4 @@ job:
     KIND: TrainingData
   output:
     KIND: ModelWriter
-    path: data/model.pkl
+    path: model/model.pkl
