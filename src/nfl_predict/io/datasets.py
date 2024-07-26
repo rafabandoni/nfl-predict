@@ -128,8 +128,26 @@ class ParquetReader(Reader):
             data = data.head(self.limit)
         return data
     
+class CSVReader(Reader):
+    """
+    Read a dataframe from a parquet file.
 
-ReaderKind = Scrapper | ParquetReader
+    Parameters:
+        path (str): local path to the dataset.
+    """
+
+    KIND: T.Literal["CSVReader"] = "CSVReader"
+
+    path: str
+
+    @T.override
+    def read(self) -> pd.DataFrame:
+        data = pd.read_csv(self.path)
+        if self.limit is not None:
+            data = data.head(self.limit)
+        return data
+
+ReaderKind = Scrapper | ParquetReader | CSVReader
 
 #%% WRITERS
 

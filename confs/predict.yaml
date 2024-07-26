@@ -1,0 +1,14 @@
+job:
+  KIND: PredictingJob
+  to_predict_input:
+    KIND: CSVReader
+    path: raw/game_schedule.csv
+  averages_input:
+    KIND: ParquetReader
+    path: data/nfl_stats_per_year.parquet
+  predict_kind:
+    KIND: PredictingData
+    model: model/model.pkl
+  output:
+    KIND: ParquetWriter
+    path: data/nfl_predicted.parquet
