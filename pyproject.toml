@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nfl_predict_project"
-version = "0.4.0"
+version = "0.4.1"
 description = "Data Engineering project to predict NFL Stands."
 authors = ["Rafael Bandoni <rafagbandoni@gmail.com>"]
 readme = "README.md"
@@ -21,6 +21,8 @@ pydantic-settings = "^2.3.4"
 loguru = "^0.7.2"
 scikit-learn = "^1.5.1"
 matplotlib = "^3.9.1"
+xgboost = "^2.1.1"
+setuptools = "^72.1.0"
 
 [tool.poetry.scripts]
 nfl_predict = "nfl_predict.script:main"

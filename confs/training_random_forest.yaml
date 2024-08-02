@@ -4,7 +4,7 @@ job:
     KIND: ParquetReader
     path: data/nfl_train_data.parquet
   model:
-    KIND: TrainingData
+    KIND: RandomForest
   output:
     KIND: ModelWriter
-    path: model/model.pkl
+    path: model/random_forest_model.pkl

@@ -188,6 +188,24 @@ class ParquetWriter(Writer):
             os.makedirs(head)
         pd.DataFrame.to_parquet(data, self.path)
 
+class CSVWriter(Writer):
+    """Writer a dataframe to a parquet file.
+
+    Parameters:
+        path (str): local or S3 path to the dataset.
+    """
+
+    KIND: T.Literal["CSVWriter"] = "CSVWriter"
+
+    path: str
+
+    @T.override
+    def write(self, data: pd.DataFrame) -> None:
+        head, tail = os.path.split(self.path)
+        if not os.path.exists(head):
+            os.makedirs(head)
+        pd.DataFrame.to_csv(data, self.path, index=False)
+
 class ModelWriter(Writer):
     """
     TODO
@@ -205,4 +223,4 @@ class ModelWriter(Writer):
         joblib.dump(model, self.path) 
 
 
-WriterKind = ParquetWriter | ModelWriter
+WriterKind = ParquetWriter | ModelWriter | CSVWriter

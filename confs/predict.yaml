@@ -8,7 +8,7 @@ job:
     path: data/nfl_stats_per_year.parquet
   predict_kind:
     KIND: PredictingData
-    model: model/model.pkl
+    model: model/xgboost_model.pkl
   output:
-    KIND: ParquetWriter
-    path: data/nfl_predicted.parquet
+    KIND: CSVWriter
+    path: data/nfl_predicted.csv

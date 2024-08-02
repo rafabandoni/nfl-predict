@@ -10,6 +10,8 @@ from nfl_predict.io import datasets, services
 from nfl_predict.core import training
 from nfl_predict.jobs import base
 
+import datetime as dt
+
 # %% JOBS
 
 
@@ -31,7 +33,10 @@ class Training(base.Job):
         logger.info("Reading: {}", self.input.path)
         data = self.input.read()
         logger.debug("Dataframe shape: {}", data.shape)
+        started = dt.datetime.now()
         model = self.model.run(data)
+        finished = dt.datetime.now()
+        logger.info("Training time: {}", finished-started)
         
         self.output.write(model)
         logger.info("File saved in {}", self.output.path)
