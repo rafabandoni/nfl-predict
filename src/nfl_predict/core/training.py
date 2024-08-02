@@ -117,13 +117,13 @@ class XGBoost(Training, strict=True, frozen=True, extra="forbid"):
         classifier = XGBClassifier(seed=841)
         f1_scorer = make_scorer(f1_score,pos_label=1)
 
-        parameters = {'learning_rate' : [0.1],
-                      'n_estimators' : [40],
-                      'max_depth': [3],
-                      'min_child_weight': [3],
-                      'gamma':[0.4],
-                      'subsample' : [0.8],
-                      'colsample_bytree' : [0.8],
+        parameters = {'learning_rate' : [0.1, 0.3, 0.5],
+                      'n_estimators' : [30, 60, 90],
+                      'max_depth': [10, 20, 30],
+                      'min_child_weight': [1, 3, 5],
+                      'gamma':[0.4, 1, 3],
+                      'subsample' : [0.3, 0.5, 0.8],
+                      'colsample_bytree' : [0.5, 0.8],
                       'scale_pos_weight' : [1],
                       'reg_alpha':[1e-5]
                       }  
