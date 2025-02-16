@@ -1,1 +1,0 @@
-"""Predict the NFL Stands."""
